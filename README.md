@@ -1,70 +1,107 @@
-# Getting Started with Create React App
+# React Tutorial
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Building a small game of Tic Tac Toe to learn about React.
 
-## Available Scripts
+## Table of contents
 
-In the project directory, you can run:
+- Setup for the tutorial
+- Overview of the fundamentals of Read: components, props and state.
+- Completing the game teaches the most common techniques in React development.
+- Adding Time Travel will give a deeper insight into the strengths of React.
 
-### `npm start`
+## Setup Local Environment
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Bulding __a new single-page application__ in React.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Make sure you have ```Node.js``` installed.
+2. Follow the installation instructions for Create React App to make a new project.
 
-### `npm test`
+To create a project run:
+```
+npx create-react-app my-app
+cd my-app
+npm start
+```
+Create React App doesn't handle backend logic or databases; it just creates a frontend build
+pipeline, so you can use it with any backend you want. Under the hood, it uses ```Babel``` and
+```webpack``` but you don't need to know anything about them.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. Delete all files in the ```src/``` folder of the new project.
+```
+cd src
+del *
+cd..
+```
+4. Add a file name ```index.css``` in the ```src/``` folder with this [CSS code](https://codepen.io/gaearon/pen/oWWQNa?editors=0100)
+5. Add a file named ```index.js``` in the ```src/``` folder with this [JS code](https://codepen.io/gaearon/pen/oWWQNa?editors=0010)
+6. Add these three lines to the top of the ```index.js``` in the ```src/``` forlder:
+```JSX
+import React from 'react';
+import ReactDOM from 'react-dom/client'
+import './index.css';
+```
+Now if you run ```npm start``` in the project folder and opent ```http://localhost:3000``` in
+the browse, you should see an empty tic-tac-toe field.
 
-### `npm run build`
+## Overview
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+What is React? 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+React is a declarative, efficient and flexible JavaScript library for building user interfaces.
+It let's you compose comples UIs from small and isolated pieces of code called "components".
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+There are diffent types of components. We'll start with React.Component
+```JSX
+class ShoppingList extends React.Component {
+    render() {
+       return (
+        <div className="shoppingList">
+            <h1>Shopping List for {this.props.name}</h1>
+            <ul>
+                <li>Instagram</li>
+                <li>WhatsApp</li>
+                <li>Oculus</li>
+            </ul>
+        </div>
+       );
+    }
+}
+// Example usage: <ShoppingList name="Mark">
+```
 
-### `npm run eject`
+We use components to tell React what we want to see on the screen. When our data changes, 
+React will efficiently update and re-render our components.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+ShoppingList is a React component class, or React component type. A component takes in parameters,
+calles ```props``` (short for "properties), and returns a hierarchy of views to display via the ```render``` methods.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The ```render``` method returns a description of what you want to see on the screen. React takes the description
+and displays the result. In particular, ```render``` returns a React element, which is a lightweight description
+of what to render. Most React developers use a special syntax called "JSX" which makes these structures easier to write.
+The <div /> syntax is transformend at build time to ```React.createElement('div')```. The above example is equivalent to:
+```JSX
+return React.createElement('div', {className: 'shopping-list'}i,
+    React.createElement('h1', /* ... h1 children ... */),
+    React.createElement('ul', /* ... ul children ... */)
+);
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+JSX comes with the full power of JavaScript. You can put any JavaScript expressions within the braces inside JSX.
+Each React element is a JavaScript object that you can store in a variable or pass around in your program.
 
-## Learn More
+The ```ShoppingList``` component above only renders built-in DOM components like ```<div/>``` and ```<li/>```.
+But you can compose and render custom React components too. For example, we can now refer to the whole shopping list
+by writing ```<ShoppingList />```. Each React component is encapsulated and can operate independently;
+this allows you to build complex UIs from simple components.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### __Inspecting the Started Code__
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Our starter code has three React components:
+- Square
+- Board
+- Game
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The Square component renders a single <button> and the Board renders 9 squares. The Game
+component renders a board with a placeholder values which we'll modify later. There are currently 
+no interactive components.
