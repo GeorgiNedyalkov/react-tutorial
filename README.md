@@ -102,6 +102,32 @@ Our starter code has three React components:
 - Board
 - Game
 
-The Square component renders a single <button> and the Board renders 9 squares. The Game
-component renders a board with a placeholder values which we'll modify later. There are currently 
+The Square component renders a single <button> and the Board renders 9 squares. The Game component renders a board with a placeholder values which we'll modify later. There are currently 
 no interactive components.
+
+### __Passing Data Through Props__
+
+Let's try passing some data from our Board component to our Square component.
+
+In the Board's ```renderSquare``` method, change the code to pass a prop called ```value``` to the Square:
+```JSX
+class Board extends React.Component {
+    renderSquare(i) {
+        return <Square value={i} />;
+    }
+} 
+```
+Change Square's ```render``` method to show that value by replacing ```{/* TODO */}``` with
+```{this.props.value}```:
+
+```JSX
+class Square extends React.Component {
+    render() {
+        return (
+            <button className="square">
+                {this.props.value}
+            </button>
+        )
+    }
+}
+```
