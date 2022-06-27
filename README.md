@@ -102,7 +102,7 @@ Our starter code has three React components:
 - Board
 - Game
 
-The Square component renders a single <button> and the Board renders 9 squares. The Game component renders a board with a placeholder values which we'll modify later. There are currently 
+The Square component renders a single ```<button>``` and the Board renders 9 squares. The Game component renders a board with a placeholder values which we'll modify later. There are currently 
 no interactive components.
 
 ### __Passing Data Through Props__
@@ -131,3 +131,89 @@ class Square extends React.Component {
     }
 }
 ```
+
+### __Making an Interactive Component__
+
+Let's fill the Square component with an "X" when we click it. First, change the button tag that is 
+returned from the Square component's ```render()``` function to this:
+```JSX
+class Square extends React.Component {
+    render() {
+        return (
+            <button className="square" onClick={() => {console.log('click'); }}>
+                {this.props.value}
+            </button>
+        )
+    }
+}
+```
+
+As a next step, we want the Square component to "remember" that it got clicked, and fill it with an
+"X" mark. To "remember" things, components use __state__. 
+
+React components can have state by setting ``this.state`` in their constructors. ``this.state`` should
+be considered as private to a React component that it's defined in. Let's store the current value of Square 
+in ``this.state``, and change it when Square is clicked.
+
+First, we'll add a constructor to the class to initialize the state:
+
+```JSX
+class Square extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: null,
+        }
+    };
+
+    render() {
+        return {
+            <button className="square" onClick={() => console.log('click')}>
+                {this.props.value}
+            </button>
+        };
+    }
+}
+
+```
+
+
+> _NOTE:_ <br>
+In JavaScript classes, you need to always call ``super`` when defining the constructor of a
+subclass. All React component classes that have a ``constructor`` should start with a 
+``super(props)`` call.
+
+Now we'll change the Square's ```render``` method to display the current state's value when clicked:
+
+- Replace ``this.props.value`` with ``this.state.value`` inside the ``<button>`` tag.
+- Replace the ``onClick={...}`` event handler with ``onClick{() => this.setState({value: 'X'})}``.
+- Put the ``className`` and ``onClick`` props on a separate lines for better readability.
+
+```JSX
+class Square extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: null,
+    };
+  }
+
+  render() {
+    return (
+      <button
+        className="square"
+        onClick={() => this.setState({value: 'X'})}
+      >
+        {this.state.value}
+      </button>
+    );
+  }
+}
+```
+
+By calling ``this.setState`` from an ``onClick`` handler in the Square's ``render`` method, we tell
+React to re-render that Square whenever ``<button>`` is clicked. After the update, the Square's 
+``this.state.value`` will be ``'X'``, so we'll see the X on the game board. If you click on any Square,
+an ``X`` should show up.
+
+When you call ``setState`` in a component, React automatically updates the child components inside it too.
