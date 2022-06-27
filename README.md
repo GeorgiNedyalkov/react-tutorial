@@ -178,7 +178,7 @@ class Square extends React.Component{
 ```
 
 
-> _NOTE:_ <br>
+> __Note__: <br>
 In JavaScript classes, you need to always call ``super`` when defining the constructor of a
 subclass. All React component classes that have a ``constructor`` should start with a 
 ``super(props)`` call.
@@ -217,3 +217,120 @@ React to re-render that Square whenever ``<button>`` is clicked. After the updat
 an ``X`` should show up.
 
 When you call ``setState`` in a component, React automatically updates the child components inside it too.
+
+### __Developer Tools__
+
+The React Devtools extention for [Chrome](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/react-devtools/) lets you inspect a React component tree with
+your browser's developer tools.
+
+The React DevTools let you check the props and the state of your React components.
+
+After installing React DevTools, you can right-click on any element on the page, click “Inspect” to open the developer tools, and the React tabs (“⚛️ Components” and “⚛️ Profiler”) will appear as the last tabs to the right. Use “⚛️ Components” to inspect the component tree.
+
+## __Completing the Game__
+
+We not have the basic block for our tic-tac-toe game. To have a complete game, we now need to alternate
+placing "X"s and "O"s on the board, and we need a way to determine a winner.
+
+__Lifting State Up__
+
+Currently, each Square component maintains the game's state. The check for a winner, we'll maintain the value of each
+of the 9 squares in one location.
+
+We may think that Board should just ask each Square for the Square's state. Although this
+approach is possible in React, we discourage it because the code becomes difficult to understand,
+suseptible to bugs, and hard to refactor. Instead, the best approach is to store the game's state in the
+parent Board component instead of in each Square. The Board component can tell each Square what to display
+by passing a prop, just like we did when we passed a number to each Square.
+
+__To collect date from multiple children, or to have two child components communicate with each other,
+you need to declare the shared state in their parent component instead. The parent component can pass the state
+back down to the children by using props; this keeps the child components in sync with each other and with the parent component.__
+
+Lifting state into a parent component is common when React components are refactored. 
+
+Add a constructor to the Board and set the Board's initial state to contain an array of 9 nulls
+corresponding to the 9 squares:
+
+```JSX
+class Board extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            squares: Array(9).fill(null),
+        };
+    }
+
+    renderSquare(i) {
+        return <Square value={i} />;
+    }
+```
+
+When we fill the board later, the ``this.state.squares`` array will look something like this:
+```JSX
+[
+    'O', null, 'X',
+    'X', 'X', 'O',
+    'O', null, null,
+]
+```
+
+The Board's ``renderSquare`` method currently looks like this:
+
+```JSX
+renderSquare(i) {
+    return <Square value ={i}>;
+}
+```
+
+We will modify the Board to instruct each individual Square about its current value ``'X'``, ``'O'``, or ``null`` for 
+empty squares.
+
+Next, we need to change what happens when a Square is clicked. The Board component now maintains
+which squares are filled. We need to create a way for the Square to update the Board's state.
+Since state is considered to be private to a component that defines it, we cannot update the Board's state
+directly from Square.
+
+Instead, we'll pass down a function from the Board to the Square, and we'll have Square call 
+that function when a square is clicked. We'll change the ``renderSquare`` method in Board to:
+
+```JSX
+renderSquare(i) {
+    return (
+        <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick} 
+        />
+    )
+}
+```
+
+> __Note__: <br> 
+We split the returned element into multiple lines for readability, and added parentheses so
+that JavaScript doesn't inser a semicolon after ``return`` and break our code.
+
+Now we're passing down two props from Board to Square: ``value`` and ``onClick``. The ``onClick``
+prop is a function that Square can call when clicked. We'll make the following changes to Square:
+- Replace ``this.state.value`` with ``this.props.value`` in Square's ``render`` method.
+- Replace ``this.setState()`` with ``this.props.onClick()`` in Squares ``render`` method.
+- Delete the ``constructor`` from Square because Square no longer keeps track of the game's state.
+
+After these changes, the Square component looks like this:
+
+```JSX
+class Square extends React.Component {
+    render() {
+        return (
+            <button
+              className="square"
+              onClick={() => this.props.onClick()} 
+            >
+              {this.props.value}
+            </button>
+        );
+    }
+}
+```
+
+When a Square is clicked, the ``onClick`` function provided by the Board is called. Here's a review
+of how this is achieved:
